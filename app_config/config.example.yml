@@ -27,3 +27,5 @@ steps:
         minutes: 30
         hours: 0
 
+    - wait_until_day:
+        relative: tomorrow

@@ -1,6 +1,7 @@
 package flow
 
 import (
+	"log"
 	"math/rand"
 	"time"
 
@@ -37,6 +38,16 @@ func runFlowStep(step *app_config.FlowStep) {
 		h := inner.Hours * int64(time.Hour)
 
 		print_utils.WaitWithBar(time.Duration(s+m+h), "Flow sleep")
+	}
+
+	if inner := step.WaitUntilDay; inner != nil {
+		switch inner.Relative {
+		case "tomorrow":
+			print_utils.WaitUntilDay(
+				time.Now().AddDate(0, 0, 1))
+		default:
+			log.Fatal("Unknown wait_until_day.relative option:", inner.Relative)
+		}
 	}
 }
 

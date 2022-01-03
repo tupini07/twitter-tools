@@ -24,6 +24,9 @@ type FlowStep struct {
 		Minutes int64 `yaml:"minutes"`
 		Hours   int64 `yaml:"hours"`
 	} `yaml:"wait,omitempty"`
+	WaitUntilDay *struct {
+		Relative string `yaml:"relative"`
+	} `yaml:"wait_until_day,omitempty"`
 }
 
 type Flow struct {

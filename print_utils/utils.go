@@ -1,12 +1,25 @@
 package print_utils
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
 
 	pb "github.com/schollz/progressbar/v3"
 )
+
+func WaitUntilDay(day time.Time) {
+	const timeFormat = "2006-01-02"
+	targetDayStr := day.Format(timeFormat)
+
+	for nowFormat := time.Now().Format(timeFormat); nowFormat != targetDayStr; nowFormat = time.Now().Format(timeFormat) {
+		fmt.Printf("\rWaiting for %s, currently %s", targetDayStr, nowFormat)
+		time.Sleep(30 * time.Minute)
+	}
+
+	fmt.Fprint(os.Stdout, "\r \r")
+}
 
 func WaitWithBar(amount time.Duration, description string) {
 	desc := "[cyan]Waiting ...[reset]"
