@@ -167,7 +167,8 @@ func UnfollowBadFriends(maxNumber int) {
 		}
 	}
 
-	printAction(fmt.Sprintf("Starting to unfollow '%s' bad friends", green(len(idsToUnfollow))))
+	actualAmountToUnfollow := len(idsToUnfollow)
+	printAction(fmt.Sprintf("Starting to unfollow '%s' bad friends", green(actualAmountToUnfollow)))
 
 	processed := 0
 	for i := len(idsToUnfollow) - 1; i >= 0; i-- {
@@ -189,7 +190,7 @@ func UnfollowBadFriends(maxNumber int) {
 			str = fmt.Sprintf("Unfollowing bad friend: %s", green(badFriendId))
 		}
 
-		printStepAction(processed, maxNumber, str)
+		printStepAction(processed, actualAmountToUnfollow, str)
 
 		UnfollowUserId(badFriendId)
 

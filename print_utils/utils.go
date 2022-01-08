@@ -13,8 +13,8 @@ func WaitUntilDay(day time.Time) {
 	const timeFormat = "2006-01-02"
 	targetDayStr := day.Format(timeFormat)
 
-	for nowFormat := time.Now().Format(timeFormat); nowFormat != targetDayStr; nowFormat = time.Now().Format(timeFormat) {
-		fmt.Printf("\rWaiting for %s, currently %s", targetDayStr, nowFormat)
+	for time.Now().Format(timeFormat) != targetDayStr {
+		fmt.Printf("\rWaiting for %s, currently %s", targetDayStr, time.Now())
 		time.Sleep(30 * time.Minute)
 	}
 

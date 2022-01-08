@@ -124,10 +124,10 @@ func printAction(action string) {
 }
 
 func printStepAction(currentStep, totalSteps int, action string) {
-	printAction(
+	printAction("" +
 		red("[") + white(currentStep) + red("/") +
-			white(totalSteps) + red("]") +
-			white(action))
+		white(totalSteps) + red("] ") +
+		white(action))
 }
 
 func printActionLog(action string) {
