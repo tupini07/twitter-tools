@@ -8,6 +8,9 @@ import (
 )
 
 type FlowStep struct {
+	Random *struct {
+		Options []FlowStep `yaml:"options"`
+	} `yaml:"random,omitempty"`
 	FollowAllFollowers *struct {
 		MaxToFollow int `yaml:"max_to_follow"`
 	} `yaml:"follow_all_followers,omitempty"`

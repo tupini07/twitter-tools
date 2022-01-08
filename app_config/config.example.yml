@@ -11,13 +11,20 @@ flow:
   repeat: true
   max_total_following: 4500
   steps:
+    - random:
+        options:
+          - follow_followers_of_others:
+              max_to_follow: 100
+              others:
+                - list of twitter handlers
+
+          - follow_followers_of_others:
+              max_to_follow: 100
+              others:
+                - another of twitter handlers
+
     - follow_all_followers:
         max_to_follow: 200
-
-    - follow_followers_of_others:
-        max_to_follow: 100
-        others:
-        - list of twitter handlers
 
     - unfollow_bad_friends:
         max_to_unfollow: 400

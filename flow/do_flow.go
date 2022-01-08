@@ -2,6 +2,7 @@ package flow
 
 import (
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/tupini07/twitter-tools/app_config"
@@ -10,6 +11,12 @@ import (
 )
 
 func runFlowStep(flow *app_config.Flow, step *app_config.FlowStep) {
+	if inner := step.Random; inner != nil {
+		// if random then choose one at random amongst the provided options
+		selected := inner.Options[rand.Intn(len(inner.Options))]
+		runFlowStep(flow, &selected)
+	}
+
 	if inner := step.FollowAllFollowers; inner != nil {
 		twitter_api.FollowAllFollowers(inner.MaxToFollow, flow.MaxTotalFollowing)
 	}
