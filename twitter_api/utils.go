@@ -43,6 +43,8 @@ var lastRequestTime time.Time = time.Now().Add(-(time.Hour * 24)) // first time 
 // makes a request and ensures that subsequent requests all respect the "delay",
 // which corresponds to the rate limit in Twitter's documentation
 func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{}, *http.Response, error)) interface{} {
+	numErrors := 0
+	const maxErrors = 7
 
 	for {
 		// if not enough time has elapsed since last request then ensure we wait
@@ -75,9 +77,18 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 		}
 
 		if err != nil || resp == nil {
-			log.WithField("err", err).Error("Retrying since there was an error")
-			print_utils.WaitWithBar(time.Minute, "Waiting because of error")
-			continue
+			numErrors += 1
+			log.WithFields(log.Fields{
+				"err":       err,
+				"numErrors": numErrors,
+			}).Error("Retrying since there was an error")
+
+			if numErrors < maxErrors {
+				print_utils.WaitWithBar(time.Minute, "Waiting because of error")
+				continue
+			} else {
+				log.Fatal("Stopping because we had too many errors")
+			}
 		}
 
 		return data
