@@ -15,8 +15,9 @@ type FlowStep struct {
 		MaxToFollow int `yaml:"max_to_follow"`
 	} `yaml:"follow_all_followers,omitempty"`
 	FollowFollowersOfOthers *struct {
-		MaxToFollow int      `yaml:"max_to_follow"`
-		Others      []string `yaml:"others"`
+		MaxToFollow      int      `yaml:"max_to_follow"`
+		MaxSourcesToPick int      `yaml:"max_sources_to_pick"`
+		Others           []string `yaml:"others"`
 	} `yaml:"follow_followers_of_others,omitempty"`
 	UnfollowBadFriends *struct {
 		MaxToUnfollow int `yaml:"max_to_unfollow"`

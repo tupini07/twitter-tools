@@ -8,18 +8,20 @@ auth:
 log_level: INFO
 
 flow:
-  repeat: true
-  max_total_following: 4500
+  repeat: true # repeat steps once they're complete
+  max_total_following: 4500 # no users will be followed if you're already following this number or more
   steps:
     - random:
-        options:
+        options: # will choose a random step among all of these option. Any valid step can be an `option`, even nested `randoms`
           - follow_followers_of_others:
               max_to_follow: 100
-              others:
+              max_sources_to_pick: 3 # consider at most 3 random sources from the list of "others"
+              others: # screen names of other accounts to follow followers from
                 - list of twitter handlers
 
           - follow_followers_of_others:
               max_to_follow: 100
+              max_sources_to_pick: -1 # consider all "others"
               others:
                 - another of twitter handlers
 

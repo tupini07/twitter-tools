@@ -70,7 +70,7 @@ func FollowAllFollowers(maxNumber, maxTotalFollowing int) {
 
 // gets the followers of every user in screenNames and follows up to maxNumber
 // of them
-func FollowFollowersOfOthers(maxNumber, maxTotalFollowing int, screenNames ...string) {
+func FollowFollowersOfOthers(maxNumber, maxTotalFollowing, maxSourcesToPick int, screenNames ...string) {
 	authedUser := GetAuthedUserInformation()
 
 	currentNumberOfFollowing := authedUser.FriendsCount
@@ -90,10 +90,17 @@ func FollowFollowersOfOthers(maxNumber, maxTotalFollowing int, screenNames ...st
 
 	data_utils.ShuffleArrayInplace(screenNames)
 
+	pickedSources := 0
 	for _, sourceName := range screenNames {
 		log.WithField("source_name", sourceName).Debug("Getting follower ids of other")
 		for _, id := range GetFollowersIDsOfUser(sourceName) {
 			allFollowerIdsOfOthersSet.Insert(id)
+		}
+		pickedSources += 1
+
+		// if maxSources is 0 or -1 then pick all sources
+		if maxSourcesToPick > 0 && pickedSources >= maxSourcesToPick {
+			break
 		}
 	}
 

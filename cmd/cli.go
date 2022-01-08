@@ -72,8 +72,14 @@ func RunCli() {
 					},
 					&cli.IntFlag{
 						Name:    "max-total-following",
-						Aliases: []string{"m"},
+						Aliases: []string{"mf"},
 						Usage:   "Maximum number of users you want to be following",
+						Value:   4500,
+					},
+					&cli.IntFlag{
+						Name:    "max-sources-to-pick",
+						Aliases: []string{"mp"},
+						Usage:   "Maximum number of sources to pick at random from the provided 'others'",
 						Value:   4500,
 					},
 					&cli.StringSliceFlag{
@@ -86,9 +92,14 @@ func RunCli() {
 				Action: func(c *cli.Context) error {
 					amount := c.Int("amount")
 					maxTotalFollowing := c.Int("max-total-followers")
+					maxSourcesToPick := c.Int("max-sources-to-pick")
 					others := c.StringSlice("other")
 
-					twitter_api.FollowFollowersOfOthers(amount, maxTotalFollowing, others...)
+					twitter_api.FollowFollowersOfOthers(amount,
+						maxTotalFollowing,
+						maxSourcesToPick,
+						others...)
+
 					return nil
 				},
 			},

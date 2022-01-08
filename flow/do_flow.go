@@ -22,7 +22,10 @@ func runFlowStep(flow *app_config.Flow, step *app_config.FlowStep) {
 	}
 
 	if inner := step.FollowFollowersOfOthers; inner != nil {
-		twitter_api.FollowFollowersOfOthers(inner.MaxToFollow, flow.MaxTotalFollowing, inner.Others...)
+		twitter_api.FollowFollowersOfOthers(inner.MaxToFollow,
+			flow.MaxTotalFollowing,
+			inner.MaxSourcesToPick,
+			inner.Others...)
 	}
 
 	if inner := step.UnfollowBadFriends; inner != nil {
