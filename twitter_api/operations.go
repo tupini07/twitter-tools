@@ -206,7 +206,7 @@ func UnfollowBadFriends(maxNumber int) {
 
 		var str string
 		if dbUser := database.GetFriendByUserId(badFriendId); dbUser != nil {
-			userIdentifier := string(dbUser.UserId)
+			userIdentifier := fmt.Sprint(dbUser.UserId)
 			if dbUser.ScreenName != nil {
 				userIdentifier = *dbUser.ScreenName
 			}
