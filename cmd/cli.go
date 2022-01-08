@@ -45,10 +45,17 @@ func RunCli() {
 						Usage:   "Amount of users to follow",
 						Value:   200,
 					},
+					&cli.IntFlag{
+						Name:    "max-total-following",
+						Aliases: []string{"m"},
+						Usage:   "Maximum number of users you want to be following",
+						Value:   4500,
+					},
 				},
 				Action: func(c *cli.Context) error {
 					amount := c.Int("amount")
-					twitter_api.FollowAllFollowers(amount)
+					maxTotalFollowing := c.Int("max-total-followers")
+					twitter_api.FollowAllFollowers(amount, maxTotalFollowing)
 					return nil
 				},
 			},
@@ -63,6 +70,12 @@ func RunCli() {
 						Usage:   "Amount of users to follow",
 						Value:   200,
 					},
+					&cli.IntFlag{
+						Name:    "max-total-following",
+						Aliases: []string{"m"},
+						Usage:   "Maximum number of users you want to be following",
+						Value:   4500,
+					},
 					&cli.StringSliceFlag{
 						Name:     "other",
 						Aliases:  []string{"o"},
@@ -72,9 +85,10 @@ func RunCli() {
 				},
 				Action: func(c *cli.Context) error {
 					amount := c.Int("amount")
+					maxTotalFollowing := c.Int("max-total-followers")
 					others := c.StringSlice("other")
 
-					twitter_api.FollowFollowersOfOthers(amount, others...)
+					twitter_api.FollowFollowersOfOthers(amount, maxTotalFollowing, others...)
 					return nil
 				},
 			},

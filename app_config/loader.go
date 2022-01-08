@@ -29,8 +29,9 @@ type FlowStep struct {
 }
 
 type Flow struct {
-	Repeat bool       `yaml:"repeat"`
-	Steps  []FlowStep `yaml:"steps"`
+	Repeat            bool       `yaml:"repeat"`
+	MaxTotalFollowing int        `yaml:"max_total_following"`
+	Steps             []FlowStep `yaml:"steps"`
 }
 
 type AppConfig struct {

@@ -8,8 +8,9 @@ auth:
 log_level: INFO
 
 flow:
-repeat: true
-steps:
+  repeat: true
+  max_total_following: 4500
+  steps:
     - follow_all_followers:
         max_to_follow: 200
 

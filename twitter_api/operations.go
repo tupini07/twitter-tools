@@ -14,10 +14,15 @@ import (
 // Will follow maxNumber followers of the current authenticated user. If
 // maxNumber is negative then all followers of the current user will be
 // processed.
-func FollowAllFollowers(maxNumber int) {
+func FollowAllFollowers(maxNumber, maxTotalFollowing int) {
 	printTitle("Starting to follow all followers")
 
 	authedUser := GetAuthedUserInformation()
+
+	currentNumberOfFollowing := authedUser.FriendsCount
+	if currentNumberOfFollowing >= maxTotalFollowing {
+		printAction("Not following any users since we're already above 'maxTotalFollowing'")
+	}
 
 	idsBeingFollowed := GetAllUserIdsBeingFollowed(authedUser.ScreenName)
 	idsThatFollowMe := GetFollowersIDsOfUser(authedUser.ScreenName)
@@ -56,7 +61,7 @@ func FollowAllFollowers(maxNumber int) {
 			FollowedOn: &now,
 		})
 
-		if processed >= maxNumber {
+		if processed >= maxNumber || currentNumberOfFollowing+processed >= maxTotalFollowing {
 			break
 		}
 
@@ -65,8 +70,14 @@ func FollowAllFollowers(maxNumber int) {
 
 // gets the followers of every user in screenNames and follows up to maxNumber
 // of them
-func FollowFollowersOfOthers(maxNumber int, screenNames ...string) {
+func FollowFollowersOfOthers(maxNumber, maxTotalFollowing int, screenNames ...string) {
 	authedUser := GetAuthedUserInformation()
+
+	currentNumberOfFollowing := authedUser.FriendsCount
+	if currentNumberOfFollowing >= maxTotalFollowing {
+		printAction("Not following any users since we're already above 'maxTotalFollowing'")
+	}
+
 	processed := 0
 
 	if maxNumber <= 0 {
@@ -123,7 +134,7 @@ func FollowFollowersOfOthers(maxNumber int, screenNames ...string) {
 				FollowedOn: &now,
 			})
 
-			if processed >= maxNumber {
+			if processed >= maxNumber || currentNumberOfFollowing+processed >= maxTotalFollowing {
 				log.WithField("processed", processed).Debug("Done following all followers")
 				return
 			}
