@@ -15,7 +15,6 @@ steps:
 
     - follow_followers_of_others:
         max_to_follow: 100
-        random: false
         others:
         - list of twitter handlers
 

@@ -13,7 +13,6 @@ type FlowStep struct {
 	} `yaml:"follow_all_followers,omitempty"`
 	FollowFollowersOfOthers *struct {
 		MaxToFollow int      `yaml:"max_to_follow"`
-		Random      bool     `yaml:"random"`
 		Others      []string `yaml:"others"`
 	} `yaml:"follow_followers_of_others,omitempty"`
 	UnfollowBadFriends *struct {

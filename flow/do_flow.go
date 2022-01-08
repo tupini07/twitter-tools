@@ -2,7 +2,6 @@ package flow
 
 import (
 	"log"
-	"math/rand"
 	"time"
 
 	"github.com/tupini07/twitter-tools/app_config"
@@ -16,16 +15,7 @@ func runFlowStep(step *app_config.FlowStep) {
 	}
 
 	if inner := step.FollowFollowersOfOthers; inner != nil {
-		others := inner.Others
-
-		// if random is specified then shuffle the order of the sources
-		if inner.Random {
-			rand.Shuffle(len(inner.Others), func(i, j int) {
-				others[i], others[j] = others[j], others[i]
-			})
-		}
-
-		twitter_api.FollowFollowersOfOthers(inner.MaxToFollow, others...)
+		twitter_api.FollowFollowersOfOthers(inner.MaxToFollow, inner.Others...)
 	}
 
 	if inner := step.UnfollowBadFriends; inner != nil {

@@ -266,7 +266,7 @@ func GetAuthedUserInformation() *twitter.User {
 	return authedUserInstace
 }
 
-func GetFollowersOfUser(screenName string) (result []int64) {
+func GetFollowersIDsOfUser(screenName string) (result []int64) {
 	mLog := log.WithField("screenName", screenName)
 	mLog.Debug("Starting to get all followers of user")
 

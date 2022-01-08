@@ -5,9 +5,10 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/tupini07/twitter-tools/data_utils"
 	"github.com/tupini07/twitter-tools/database"
 
-	"github.com/dghubble/go-twitter/twitter"
+	"github.com/golang-collections/collections/set"
 )
 
 // Will follow maxNumber followers of the current authenticated user. If
@@ -19,7 +20,7 @@ func FollowAllFollowers(maxNumber int) {
 	authedUser := GetAuthedUserInformation()
 
 	idsBeingFollowed := GetAllUserIdsBeingFollowed(authedUser.ScreenName)
-	idsThatFollowMe := GetFollowersOfUser(authedUser.ScreenName)
+	idsThatFollowMe := GetFollowersIDsOfUser(authedUser.ScreenName)
 
 	idsToFollow := make([]int64, 0)
 
@@ -74,51 +75,60 @@ func FollowFollowersOfOthers(maxNumber int, screenNames ...string) {
 
 	log.WithField("screen_names", screenNames).Debug("Starting following followers of others")
 
+	allFollowerIdsOfOthersSet := set.New()
+
+	data_utils.ShuffleArrayInplace(screenNames)
+
 	for _, sourceName := range screenNames {
-		printTitle(fmt.Sprintf("Starting to follow all followers of %s", green(sourceName)))
-
-		sourceLog := log.WithFields(log.Fields{
-			"source_name": sourceName,
-		})
-
-		channel := make(chan twitter.User)
-		go GetFollowersOfUsersStream(sourceName, channel)
-
-		for user := range channel {
-			sourceLog.WithField("screen_name", user.ScreenName).Debug("Processing user")
-
-			haveWeUnfollowedThisUserInThePast := false
-			if dbEntry := database.GetFriendByUserId(user.ID); dbEntry != nil {
-				haveWeUnfollowedThisUserInThePast = dbEntry.UnfollowedOn != nil
-			}
-
-			// only send requests to users that we're not yet following and that don't
-			// have a private account
-			if user.ID != authedUser.ID && !haveWeUnfollowedThisUserInThePast && !user.Following && !user.FollowRequestSent && !user.Protected {
-				processed += 1
-
-				str := fmt.Sprintf("Following user: %s", green(user.ScreenName))
-				printStepAction(processed, maxNumber, str)
-
-				FollowUserScreenName(user.ScreenName)
-
-				now := time.Now()
-				database.CreateFriend(&database.Friend{
-					UserId:     user.ID,
-					ScreenName: &user.ScreenName,
-					FollowedOn: &now,
-				})
-
-				if processed >= maxNumber {
-					sourceLog.Debug("Done following all followers of source")
-					log.WithField("processed", processed).Debug("Done following all followers")
-					return
-				}
-			}
+		log.WithField("source_name", sourceName).Debug("Getting follower ids of other")
+		for _, id := range GetFollowersIDsOfUser(sourceName) {
+			allFollowerIdsOfOthersSet.Insert(id)
 		}
-
 	}
 
+	myFollowersSet := set.New(GetFollowersIDsOfUser(
+		authedUser.ScreenName))
+
+	// so that we don't try to follow ourselves
+	myFollowersSet.Insert(authedUser.ID)
+
+	potentialIdsToFollow := make([]int64, 0)
+
+	// consider followers which are not my followers
+	allFollowerIdsOfOthersSet.Difference(myFollowersSet).Do(func(i interface{}) {
+		potentialIdsToFollow = append(potentialIdsToFollow, i.(int64))
+	})
+
+	data_utils.ShuffleArrayInplace(potentialIdsToFollow)
+
+	for _, userId := range potentialIdsToFollow {
+		log.WithField("user_id", userId).Debug("Processing user")
+
+		haveWeUnfollowedThisUserInThePast := false
+		if dbEntry := database.GetFriendByUserId(userId); dbEntry != nil {
+			haveWeUnfollowedThisUserInThePast = dbEntry.UnfollowedOn != nil
+		}
+
+		if !haveWeUnfollowedThisUserInThePast {
+			processed += 1
+
+			str := fmt.Sprintf("Following user: %s", green(userId))
+			printStepAction(processed, maxNumber, str)
+
+			FollowUserId(userId)
+
+			now := time.Now()
+			database.CreateFriend(&database.Friend{
+				UserId:     userId,
+				FollowedOn: &now,
+			})
+
+			if processed >= maxNumber {
+				log.WithField("processed", processed).Debug("Done following all followers")
+				return
+			}
+		}
+	}
 }
 
 // Unfollows maxNumber amount of users being followed by the current user, from
@@ -129,7 +139,7 @@ func UnfollowBadFriends(maxNumber int) {
 	authedUser := GetAuthedUserInformation()
 
 	idsBeingFollowed := GetAllUserIdsBeingFollowed(authedUser.ScreenName)
-	idsThatFollowMe := GetFollowersOfUser(authedUser.ScreenName)
+	idsThatFollowMe := GetFollowersIDsOfUser(authedUser.ScreenName)
 
 	idsToUnfollow := make([]int64, 0)
 
