@@ -104,8 +104,11 @@ func FollowFollowersOfOthers(maxNumber, maxTotalFollowing, maxSourcesToPick int,
 		}
 	}
 
-	myFollowersSet := set.New(GetFollowersIDsOfUser(
-		authedUser.ScreenName))
+	myFollowersIds := GetFollowersIDsOfUser(authedUser.ScreenName)
+	myFollowersSet := set.New()
+	for _, mFID := range myFollowersIds {
+		myFollowersSet.Insert(mFID)
+	}
 
 	// so that we don't try to follow ourselves
 	myFollowersSet.Insert(authedUser.ID)
