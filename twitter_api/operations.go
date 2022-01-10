@@ -71,6 +71,8 @@ func FollowAllFollowers(maxNumber, maxTotalFollowing int) {
 // gets the followers of every user in screenNames and follows up to maxNumber
 // of them
 func FollowFollowersOfOthers(maxNumber, maxTotalFollowing, maxSourcesToPick int, screenNames ...string) {
+	printTitle("Following followers of others")
+
 	authedUser := GetAuthedUserInformation()
 
 	currentNumberOfFollowing := authedUser.FriendsCount
