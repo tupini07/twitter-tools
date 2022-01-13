@@ -6,6 +6,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/tupini07/twitter-tools/database"
 
 	"github.com/dghubble/go-twitter/twitter"
 )
@@ -198,10 +199,17 @@ func FollowUserScreenName(screenName string) {
 			ScreenName: screenName,
 		})
 
-		if err != nil && strings.Contains(err.Error(), "160 You've already requested to follow") {
-			// 160 You've already requested to follow
-			printActionLog("Skipping user since follow request has already been sent")
-			return nil, resp, nil
+		if err != nil {
+			if strings.Contains(err.Error(), "160 You've already requested to follow") {
+				// 160 You've already requested to follow
+				printActionLog("Skipping user since follow request has already been sent")
+				return nil, resp, nil
+			}
+
+			if strings.Contains(err.Error(), "162 You have been blocked from following this account at the request of the user") {
+				printAction(yellow("Skipping user since they have asked we don't follow them"))
+				return nil, resp, nil
+			}
 		}
 
 		return data, resp, err
@@ -209,6 +217,14 @@ func FollowUserScreenName(screenName string) {
 }
 
 func FollowUserId(userId int64) {
+	// check if user hasn't asked that we don't dollow them
+	if dbEntry := database.GetFriendByUserId(userId); dbEntry != nil {
+		if dbEntry.UserAskedWeDontFollowThem {
+			printAction(yellow("Skipping user since they have asked we don't follow them"))
+			return
+		}
+	}
+
 	log.WithField("user_id", userId).Debug("Following user")
 
 	cli := getApiClient()
@@ -217,10 +233,21 @@ func FollowUserId(userId int64) {
 			UserID: userId,
 		})
 
-		if err != nil && strings.Contains(err.Error(), "160 You've already requested to follow") {
-			// 160 You've already requested to follow
-			printActionLog("Skipping user since follow request has already been sent")
-			return nil, resp, nil
+		if err != nil {
+			if strings.Contains(err.Error(), "160 You've already requested to follow") {
+				// 160 You've already requested to follow
+				printActionLog(yellow("Skipping user since follow request has already been sent"))
+				return nil, resp, nil
+			}
+
+			if strings.Contains(err.Error(), "162 You have been blocked from following this account") {
+				database.CreateFriend(&database.Friend{
+					UserId:                    userId,
+					UserAskedWeDontFollowThem: true,
+				})
+				printAction(yellow("Skipping user since they have asked we don't follow them"))
+				return nil, resp, nil
+			}
 		}
 
 		return data, resp, err

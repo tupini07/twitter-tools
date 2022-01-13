@@ -1,5 +1,14 @@
 package database
 
+// save friend as is. To be used after modifying a friend instance that came
+// from the DB
+func SaveFriend(friend *Friend) {
+	db := getDbInstance()
+	db.Save(friend)
+}
+
+// save friend but if friend exist then only override the value of the
+// properties that are set in the incoming `friend`
 func CreateFriend(friend *Friend) {
 	db := getDbInstance()
 
@@ -18,6 +27,9 @@ func CreateFriend(friend *Friend) {
 		if friend.UnfollowedOn != nil {
 			existingEntry.UnfollowedOn = friend.UnfollowedOn
 		}
+
+		// once set this cannot be unset
+		existingEntry.UserAskedWeDontFollowThem = existingEntry.UserAskedWeDontFollowThem || friend.UserAskedWeDontFollowThem
 
 		db.Save(existingEntry)
 	}
