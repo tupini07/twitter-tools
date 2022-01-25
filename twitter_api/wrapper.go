@@ -206,6 +206,11 @@ func FollowUserScreenName(screenName string) {
 				return nil, resp, nil
 			}
 
+			if strings.Contains(err.Error(), "108 Cannot find specified user") {
+				printAction(yellow("Skipping user since Twitter says it can't find them"))
+				return nil, resp, nil
+			}
+
 			if strings.Contains(err.Error(), "162 You have been blocked from following this account at the request of the user") {
 				printAction(yellow("Skipping user since they have asked we don't follow them"))
 				return nil, resp, nil
@@ -237,6 +242,11 @@ func FollowUserId(userId int64) {
 			if strings.Contains(err.Error(), "160 You've already requested to follow") {
 				// 160 You've already requested to follow
 				printActionLog(yellow("Skipping user since follow request has already been sent"))
+				return nil, resp, nil
+			}
+
+			if strings.Contains(err.Error(), "108 Cannot find specified user") {
+				printAction(yellow("Skipping user since Twitter says it can't find them"))
 				return nil, resp, nil
 			}
 
