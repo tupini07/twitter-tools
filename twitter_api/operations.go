@@ -30,19 +30,23 @@ func FollowAllFollowers(maxNumber, maxTotalFollowing int) {
 	idsToFollow := make([]int64, 0)
 
 	for _, followerId := range idsThatFollowMe {
-		areWeFollowingUser := false
 
-		for _, followedId := range idsBeingFollowed {
-			// we know we don't need to follow if we're already following us
-			if followedId == followerId {
-				areWeFollowingUser = true
-				break
+		// if we're already following friend on the DB then skip them
+		if dbFriend := database.GetFriendByUserId(followerId); dbFriend != nil {
+			if dbFriend.FollowedOn != nil {
+				continue
 			}
 		}
 
-		if !areWeFollowingUser {
-			idsToFollow = append(idsToFollow, followerId)
+		// otherwise, skip them if we're following them on twitter
+		for _, followedId := range idsBeingFollowed {
+			// we know we don't need to follow if we're already following us
+			if followedId == followerId {
+				continue
+			}
 		}
+
+		idsToFollow = append(idsToFollow, followerId)
 	}
 
 	printAction(fmt.Sprintf("Starting to follow '%s' unfollowed users", green(len(idsToFollow))))

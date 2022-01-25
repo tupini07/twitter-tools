@@ -240,7 +240,14 @@ func FollowUserId(userId int64) {
 
 		if err != nil {
 			if strings.Contains(err.Error(), "160 You've already requested to follow") {
-				// 160 You've already requested to follow
+				// add user to DB as if it was already being followed so that we skip it in the future
+				// this error likely comes from the fact that a private user was followed from outside
+				// twitter-tools and still hasn't accepted the follow request.
+				now := time.Now()
+				database.CreateFriend(&database.Friend{
+					UserId:     userId,
+					FollowedOn: &now,
+				})
 				printActionLog(yellow("Skipping user since follow request has already been sent"))
 				return nil, resp, nil
 			}
