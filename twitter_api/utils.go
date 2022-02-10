@@ -74,6 +74,11 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 				print_utils.WaitWithBar(15*time.Minute, "[yellow]Waiting timeout from Twitter[reset]")
 				continue
 			}
+
+			if resp.StatusCode == 326 {
+				respLogger.Fatal("Our account has been blocked! Stopping execution. Please log in to https://twitter.com to unlock your account. " +
+					"Wait some days before running this tool again to avoid angering the 'twitter gods' even more.")
+			}
 		}
 
 		if err != nil || resp == nil {
