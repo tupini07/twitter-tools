@@ -21,7 +21,8 @@ func FollowAllFollowers(maxNumber, maxTotalFollowing int) {
 
 	currentNumberOfFollowing := authedUser.FriendsCount
 	if currentNumberOfFollowing >= maxTotalFollowing {
-		printAction("Not following any users since we're already above 'maxTotalFollowing'")
+		printAction(fmt.Sprintf("Not following any users since we're already above the specified 'maxTotalFollowing' of %d", maxTotalFollowing))
+		return
 	}
 
 	idsBeingFollowed := GetAllUserIdsBeingFollowed(authedUser.ScreenName)
@@ -81,7 +82,8 @@ func FollowFollowersOfOthers(maxNumber, maxTotalFollowing, maxSourcesToPick int,
 
 	currentNumberOfFollowing := authedUser.FriendsCount
 	if currentNumberOfFollowing >= maxTotalFollowing {
-		printAction("Not following any users since we're already above 'maxTotalFollowing'")
+		printAction(fmt.Sprintf("Not following any users since we're already above the specified 'maxTotalFollowing' of %d", maxTotalFollowing))
+		return
 	}
 
 	processed := 0
