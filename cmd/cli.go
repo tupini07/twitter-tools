@@ -54,7 +54,7 @@ func RunCli() {
 				},
 				Action: func(c *cli.Context) error {
 					amount := c.Int("amount")
-					maxTotalFollowing := c.Int("max-total-followers")
+					maxTotalFollowing := c.Int("max-total-following")
 					twitter_api.FollowAllFollowers(amount, maxTotalFollowing)
 					return nil
 				},
@@ -91,7 +91,7 @@ func RunCli() {
 				},
 				Action: func(c *cli.Context) error {
 					amount := c.Int("amount")
-					maxTotalFollowing := c.Int("max-total-followers")
+					maxTotalFollowing := c.Int("max-total-following")
 					maxSourcesToPick := c.Int("max-sources-to-pick")
 					others := c.StringSlice("other")
 
