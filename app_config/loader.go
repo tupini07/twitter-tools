@@ -2,8 +2,8 @@ package app_config
 
 import (
 	"io/ioutil"
-	"log"
 
+	"github.com/tupini07/twitter-tools/print_utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -53,7 +53,7 @@ func readConfigFile() string {
 	content, err := ioutil.ReadFile("config.yml")
 	if err != nil {
 		writeDefaultConfig()
-		log.Fatal("No config file was found, so a default one has been writter to the current directory. Please modify values as desired and try again. Exiting..")
+		print_utils.Fatal("No config file was found, so a default one has been writter to the current directory. Please modify values as desired and try again. Exiting..")
 	}
 
 	return string(content)
@@ -69,7 +69,7 @@ func GetConfig() *AppConfig {
 
 		err := yaml.Unmarshal([]byte(data), &c)
 		if err != nil {
-			log.Fatalf("error parsing config file: %v", err)
+			print_utils.Fatalf("error parsing config file: %v", err)
 		}
 
 		configInstance = &c

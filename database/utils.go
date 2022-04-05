@@ -1,8 +1,7 @@
 package database
 
 import (
-	"log"
-
+	"github.com/tupini07/twitter-tools/print_utils"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -17,7 +16,7 @@ func getDbInstance() *gorm.DB {
 		})
 
 		if err != nil {
-			log.Fatal("failed to connect database")
+			print_utils.Fatal("failed to connect database")
 		}
 		dbInstance = db
 	}

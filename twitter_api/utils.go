@@ -76,8 +76,9 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 			}
 
 			if resp.StatusCode == 326 {
-				respLogger.Fatal("Our account has been blocked! Stopping execution. Please log in to https://twitter.com to unlock your account. " +
-					"Wait some days before running this tool again to avoid angering the 'twitter gods' even more.")
+				logger_str, _ := respLogger.String()
+				print_utils.Fatalf("Our account has been blocked! Stopping execution. Please log in to https://twitter.com to unlock your account. "+
+					"Wait some days before running this tool again to avoid angering the 'twitter gods' even more. Data: %s\n", logger_str)
 			}
 		}
 
@@ -92,7 +93,7 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 				print_utils.WaitWithBar(time.Minute, "Waiting because of error")
 				continue
 			} else {
-				log.Fatal("Stopping because we had too many errors")
+				print_utils.Fatal("Stopping because we had too many errors")
 			}
 		}
 
@@ -130,11 +131,11 @@ func printTitle(title string) {
 	// ### some text ###
 	// #################
 
-	fmt.Printf("\n%s%s%s\n", wrapperLine, decorated, wrapperLine)
+	print_utils.Printf("\n%s%s%s\n", wrapperLine, decorated, wrapperLine)
 }
 
 func printAction(action string) {
-	fmt.Printf("\t%s%s\n",
+	print_utils.Printf("\t%s%s\n",
 		yellow("•"),
 		cyan(action))
 }
@@ -147,5 +148,5 @@ func printStepAction(currentStep, totalSteps int, action string) {
 }
 
 func printActionLog(action string) {
-	fmt.Printf("\t%s\n", yellow(action))
+	print_utils.Printf("\t%s\n", yellow(action))
 }

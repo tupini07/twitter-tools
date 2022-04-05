@@ -1,8 +1,6 @@
 package print_utils
 
 import (
-	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -14,14 +12,25 @@ func WaitUntilDay(day time.Time) {
 	targetDayStr := day.Format(timeFormat)
 
 	for time.Now().Format(timeFormat) != targetDayStr {
-		fmt.Printf("\rWaiting for %s, currently %s", targetDayStr, time.Now())
+		Printf("\rWaiting for %s, currently %s", targetDayStr, time.Now())
 		time.Sleep(30 * time.Minute)
 	}
 
-	fmt.Fprint(os.Stdout, "\r \r")
+	Fprint(os.Stdout, "\r \r")
 }
 
 func WaitWithBar(amount time.Duration, description string) {
+	if amount <= 0 {
+		Fatalf("Cannot wait 0 or less amount of time! Tried to wait %s", amount.String())
+	}
+
+	if isLoggingToFile {
+		// if we're logging to file then don't show waiting bar since it would be very
+		// messy. Just show that we're waiting and how long
+		Printf("Waiting %s", amount)
+		return
+	}
+
 	desc := "[cyan]Waiting ...[reset]"
 	if description != "" {
 		desc = description
@@ -45,10 +54,6 @@ func WaitWithBar(amount time.Duration, description string) {
 		pb.OptionClearOnFinish(),
 	)
 	bar.RenderBlank()
-
-	if amount <= 0 {
-		log.Fatalf("Cannot wait 0 or less amount of time! Tried to wait %s", amount.String())
-	}
 
 	// We use target time instead of just counting seconds because the latter
 	// won't be correct if PC running this goes to sleep or similar thing

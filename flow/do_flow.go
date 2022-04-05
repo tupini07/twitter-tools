@@ -1,7 +1,6 @@
 package flow
 
 import (
-	"log"
 	"math/rand"
 	"time"
 
@@ -46,7 +45,7 @@ func runFlowStep(flow *app_config.Flow, step *app_config.FlowStep) {
 			print_utils.WaitUntilDay(
 				time.Now().AddDate(0, 0, 1))
 		default:
-			log.Fatal("Unknown wait_until_day.relative option:", inner.Relative)
+			print_utils.Fatal("Unknown wait_until_day.relative option:", inner.Relative)
 		}
 	}
 }

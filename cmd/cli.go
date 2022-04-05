@@ -1,20 +1,33 @@
 package cmd
 
 import (
-	"log"
 	"os"
 
 	"github.com/tupini07/twitter-tools/app_config"
 	"github.com/tupini07/twitter-tools/flow"
+	"github.com/tupini07/twitter-tools/print_utils"
 	"github.com/tupini07/twitter-tools/twitter_api"
 	"github.com/urfave/cli/v2"
 )
 
+func setupLogger(c *cli.Context) {
+	logOutput := c.String("log-output")
+	print_utils.SetupLogger(logOutput)
+}
+
 func RunCli() {
 	app := &cli.App{
 		Name:    "twitter-tools",
-		Version: "0.0.3",
+		Version: "1.0.0",
 		Usage:   "Collection of tools to manage a Twitter account",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "log-output",
+				Aliases: []string{"l"},
+				Usage:   "If provided, the path of the file where output will be logged",
+				Value:   "",
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:    "unfollow-bad-friends",
@@ -29,6 +42,7 @@ func RunCli() {
 					},
 				},
 				Action: func(c *cli.Context) error {
+					setupLogger(c)
 					amount := c.Int("amount")
 					twitter_api.UnfollowBadFriends(amount)
 					return nil
@@ -53,6 +67,7 @@ func RunCli() {
 					},
 				},
 				Action: func(c *cli.Context) error {
+					setupLogger(c)
 					amount := c.Int("amount")
 					maxTotalFollowing := c.Int("max-total-following")
 					twitter_api.FollowAllFollowers(amount, maxTotalFollowing)
@@ -90,6 +105,7 @@ func RunCli() {
 					},
 				},
 				Action: func(c *cli.Context) error {
+					setupLogger(c)
 					amount := c.Int("amount")
 					maxTotalFollowing := c.Int("max-total-following")
 					maxSourcesToPick := c.Int("max-sources-to-pick")
@@ -108,6 +124,7 @@ func RunCli() {
 				Aliases: []string{"df"},
 				Usage:   "Performs the flow actions defined in config.yml",
 				Action: func(c *cli.Context) error {
+					setupLogger(c)
 					cnf := app_config.GetConfig()
 					flow.DoFlow(cnf.Flow)
 
@@ -119,6 +136,6 @@ func RunCli() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		print_utils.Fatal(err)
 	}
 }

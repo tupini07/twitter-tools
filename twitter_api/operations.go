@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tupini07/twitter-tools/data_utils"
 	"github.com/tupini07/twitter-tools/database"
+	"github.com/tupini07/twitter-tools/print_utils"
 
 	"github.com/golang-collections/collections/set"
 )
@@ -89,7 +90,7 @@ func FollowFollowersOfOthers(maxNumber, maxTotalFollowing, maxSourcesToPick int,
 	processed := 0
 
 	if maxNumber <= 0 {
-		log.Fatalf("Error! maxNumbers needs to be greater than 0 but %d was provided\n", maxNumber)
+		print_utils.Fatalf("Error! maxNumbers needs to be greater than 0 but %d was provided\n", maxNumber)
 	}
 
 	log.WithField("screen_names", screenNames).Debug("Starting following followers of others")
