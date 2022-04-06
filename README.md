@@ -24,13 +24,33 @@ GLOBAL OPTIONS:
    --version, -v  print the version (default: false)                                         
 ```
 
-## Supported tasks
-
-TODO
-
 ## Flow
 
-TODO
+Flow actions are defined in your `config.yml`. If you don't already have a local config file then an example one will be created for you on first execution. You can always check the latest _example config_ [here](https://github.com/tupini07/twitter-tools/blob/main/app_config/config.example.yml). The example config contains all the possible steps that can be used as part of the flow, which are described in more depth below.
+
+### Common config
+
+```yaml
+flow:
+  repeat: true # repeat flow execution as soon as it completes
+  max_total_following: 4500 # no users will be followed if you're already following this number or more
+  steps:
+    - list of steps we want to execute
+```
+
+### Possible Steps
+
+TODO all below
+
+#### Follow followers of others
+
+```yaml
+- follow_followers_of_others:
+    max_to_follow: (number) the maximum number of people we want to follow as part of this step. If not provided then there will be no follow limit
+    max_sources_to_pick: (number) pick this number of sources randomly from the list of "others". If not provided then the whole list will be used
+    others: # screen names of other accounts to follow followers from
+      - list of twitter handlers
+```
 
 ## TODOs
 
