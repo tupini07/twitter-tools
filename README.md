@@ -52,6 +52,17 @@ TODO all below
       - list of twitter handlers
 ```
 
+#### Follow all your followers
+
+#### Unfollow people that are not following you
+
+#### Wait
+
+#### Wait until day
+
+#### Random step
+
+
 ## TODOs
 
 - Save database and config to a default location
