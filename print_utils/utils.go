@@ -27,7 +27,7 @@ func WaitWithBar(amount time.Duration, description string) {
 	if isLoggingToFile {
 		// if we're logging to file then don't show waiting bar since it would be very
 		// messy. Just show that we're waiting and how long
-		Printf("Waiting %s", amount)
+		Printf("Waiting because '%s' for amount '%s'\n", description, amount)
 		return
 	}
 

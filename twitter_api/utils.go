@@ -84,10 +84,9 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 
 		if err != nil || resp == nil {
 			numErrors += 1
-			log.WithFields(log.Fields{
-				"err":       err,
-				"numErrors": numErrors,
-			}).Error("Retrying since there was an error")
+
+			print_utils.Errorf("Retrying since there was an error: %s", err)
+			print_utils.Errorf("Total amount of errors encountered: %d", numErrors)
 
 			if numErrors < maxErrors {
 				print_utils.WaitWithBar(time.Minute, "Waiting because of error")

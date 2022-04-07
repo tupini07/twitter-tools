@@ -65,6 +65,22 @@ func Fatal(a ...any) {
 	}
 }
 
+func Errorf(format string, a ...any) {
+	if isLoggingToFile {
+		appendToLogFile(fmt.Sprintf(format, a...))
+	} else {
+		fmt.Errorf(format, a...)
+	}
+}
+
+func Error(a ...any) {
+	if isLoggingToFile {
+		appendToLogFile(fmt.Sprint(a...))
+	} else {
+		fmt.Errorf("%s", fmt.Sprint(a...))
+	}
+}
+
 func appendToLogFile(msg string) {
 	f, err := os.OpenFile(outputFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
