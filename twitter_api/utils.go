@@ -55,7 +55,7 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 
 		waitingDifference := effectiveDelay - time.Since(lastRequestTime)
 		if waitingDifference > 0 {
-			print_utils.WaitWithBar(waitingDifference, "")
+			print_utils.WaitWithBar(waitingDifference, "Avoid overloading Twitter API")
 		}
 
 		data, resp, err := reqFunc()
