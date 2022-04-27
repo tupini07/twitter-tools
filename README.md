@@ -1,5 +1,8 @@
 # Twitter Tools
 
+![Matrix](https://img.shields.io/matrix/054h509j4h509hjtrj455g:matrix.org?label=chat&logo=Matrix)
+
+
 This project is a small collection of tools that automate certain tasks for Twitter. I used it to teach myself the [Go programming language](https://github.com/golang/go) along the way.
 
 ```
