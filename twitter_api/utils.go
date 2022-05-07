@@ -75,6 +75,13 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 				continue
 			}
 
+			if resp.StatusCode == 161 {
+				logger_str, _ := respLogger.String()
+				print_utils.Fatalf("Getting a warning from Twitter that we can no longer follow users! Stopping execution since proceeding may cause "+
+					"our account to be blocked. Please update the 'max_total_following' value so that we no longer try to follow more users than what Twitter allows. A good "+
+					"idea is to set this value to your current number of followers or less.", logger_str)
+			}
+
 			if resp.StatusCode == 326 {
 				logger_str, _ := respLogger.String()
 				print_utils.Fatalf("Our account has been blocked! Stopping execution. Please log in to https://twitter.com to unlock your account. "+
