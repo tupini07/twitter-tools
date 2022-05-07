@@ -1,27 +1,27 @@
 # Twitter Tools
 
-This project is a small collection of tools that automate certain tasks for Twitter. I used it to teach myself the [Go programming language](https://github.com/golang/go) along the way.
+This project is a small collection of tools that automate certain tasks for Twitter.
 
 ```
-NAME:                                                                                        
-   twitter-tools - Collection of tools to manage a Twitter account                           
-                                                                                             
-USAGE:                                                                                       
-   twitter-tools.exe [global options] command [command options] [arguments...]               
-                                                                                             
-VERSION:                                                                                     
-   0.0.3                                                                                     
-                                                                                             
-COMMANDS:                                                                                    
+NAME:
+   twitter-tools - Collection of tools to manage a Twitter account                                                                                                                                                                                                                                                                                                                                        
+USAGE:
+   twitter-tools [global options] command [command options] [arguments...]
+
+VERSION:
+   1.0.0
+
+COMMANDS:
    unfollow-bad-friends, ubf        Unfollows bad friends starting from the oldest friendship
-   follow-all-followers, faf        Ensure followers of the current user are being followed  
-   follow-followers-of-other, ffoo  Follow followers of other(s) users                       
-   do-flow, df                      Performs the flow actions defined in config.yml          
-   help, h                          Shows a list of commands or help for one command         
-                                                                                             
-GLOBAL OPTIONS:                                                                              
-   --help, -h     show help (default: false)                                                 
-   --version, -v  print the version (default: false)                                         
+   follow-all-followers, faf        Ensure followers of the current user are being followed
+   follow-followers-of-other, ffoo  Follow followers of other(s) users
+   do-flow, df                      Performs the flow actions defined in config.yml
+   help, h                          Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --log-output value, -l value  If provided, the path of the file where output will be logged
+   --help, -h                    show help (default: false)
+   --version, -v                 print the version (default: false)                                       
 ```
 
 ## Flow
