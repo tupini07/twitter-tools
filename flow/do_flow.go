@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/golang-collections/collections/set"
 	"github.com/tupini07/twitter-tools/app_config"
 	"github.com/tupini07/twitter-tools/print_utils"
 	"github.com/tupini07/twitter-tools/twitter_api"
@@ -21,10 +22,23 @@ func runFlowStep(flow *app_config.Flow, step *app_config.FlowStep) {
 	}
 
 	if inner := step.FollowFollowersOfOthers; inner != nil {
+		// convert list of "others" into a set
+		// TODO consider moving this to the actual twitter_api.FollowFollowersOfOthers
+		//      function, or when the configuration itself is loaded
+		setOthers := set.New()
+		for _, other := range inner.Others {
+			setOthers.Insert(other)
+		}
+
+		othersDedup := []string{}
+		setOthers.Do(func(other interface{}) {
+			othersDedup = append(othersDedup, other.(string))
+		})
+
 		twitter_api.FollowFollowersOfOthers(inner.MaxToFollow,
 			flow.MaxTotalFollowing,
 			inner.MaxSourcesToPick,
-			inner.Others...)
+			othersDedup...)
 	}
 
 	if inner := step.UnfollowBadFriends; inner != nil {
