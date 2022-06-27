@@ -69,7 +69,7 @@ func Errorf(format string, a ...any) {
 	if isLoggingToFile {
 		appendToLogFile(fmt.Sprintf(format, a...))
 	} else {
-		fmt.Errorf(format, a...)
+		_ = fmt.Errorf(format, a...)
 	}
 }
 
@@ -77,7 +77,7 @@ func Error(a ...any) {
 	if isLoggingToFile {
 		appendToLogFile(fmt.Sprint(a...))
 	} else {
-		fmt.Errorf("%s", fmt.Sprint(a...))
+		_ = fmt.Errorf("%s", fmt.Sprint(a...))
 	}
 }
 
