@@ -90,6 +90,16 @@ func makeTimeoutHandledRequest(delay time.Duration, reqFunc func() (interface{},
 		}
 
 		if err != nil || resp == nil {
+			// TODO for some reason 161 errors have an empty resp so the handler above is not working.. An issue with the upstream dep maybe?
+			// so we'll handle it in a ugly way here.
+			if strings.Contains(err.Error(), "161 You are unable to follow more people at this time") {
+				//! NOTE remove this! This is duplicate code, same as the `if resp.StatusCode == 161` handler above
+				logger_str, _ := respLogger.String()
+				print_utils.Fatalf("[FROM DUPLICATED SECTION] Getting a warning from Twitter that we can no longer follow users! Stopping execution since proceeding may cause "+
+					"our account to be blocked. Please update the 'max_total_following' value so that we no longer try to follow more users than what Twitter allows. A good "+
+					"idea is to set this value to your current number of followers or less.", logger_str)
+			}
+
 			numErrors += 1
 
 			print_utils.Errorf("Retrying since there was an error: %s", err)
