@@ -276,9 +276,18 @@ func UnfollowUserScreenName(screenName string) {
 
 	cli := getApiClient()
 	makeTimeoutHandledRequest(time.Minute, func() (interface{}, *http.Response, error) {
-		return cli.Friendships.Destroy(&twitter.FriendshipDestroyParams{
+		data, resp, err := cli.Friendships.Destroy(&twitter.FriendshipDestroyParams{
 			ScreenName: screenName,
 		})
+
+		if err != nil {
+			if strings.Contains(err.Error(), "34 Sorry, that page does not exist") {
+				printActionLog("Skipping user since it doesn't exist")
+				return nil, resp, nil
+			}
+		}
+
+		return data, resp, err
 	})
 }
 func UnfollowUserId(userId int64) {
@@ -286,9 +295,18 @@ func UnfollowUserId(userId int64) {
 
 	cli := getApiClient()
 	makeTimeoutHandledRequest(time.Minute, func() (interface{}, *http.Response, error) {
-		return cli.Friendships.Destroy(&twitter.FriendshipDestroyParams{
+		data, resp, err := cli.Friendships.Destroy(&twitter.FriendshipDestroyParams{
 			UserID: userId,
 		})
+
+		if err != nil {
+			if strings.Contains(err.Error(), "34 Sorry, that page does not exist") {
+				printActionLog("Skipping user since it doesn't exist")
+				return nil, resp, nil
+			}
+		}
+
+		return data, resp, err
 	})
 }
 
